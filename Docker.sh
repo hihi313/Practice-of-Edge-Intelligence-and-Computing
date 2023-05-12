@@ -1,8 +1,9 @@
 #!/bin/bash
 
 echo "Sart time=$(date +"%T")"
-IMG_NAME="openvino"
-IMG_TAG="latest"
+IMG_USER=""
+IMG_NAME="edge-ai"
+IMG_TAG="openvino"
 CTNR_NAME="${IMG_NAME}_ctnr"
 WORKDIR="/app"
 
@@ -85,7 +86,7 @@ do
                 --volume="$PWD:$WORKDIR" \
                 --workdir $WORKDIR \
                 --name $CTNR_NAME \
-                "$IMG_NAME:$IMG_TAG"
+                "$IMG_USER/$IMG_NAME:$IMG_TAG"
 
         # Disable tracing
         set +x

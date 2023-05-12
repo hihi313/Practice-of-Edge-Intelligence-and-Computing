@@ -8,6 +8,7 @@ on:
       - "docker/*packages?.txt"
       - "docker/requirements?.txt"
       - "docker/*entrypoint.sh" 
+  workflow_dispatch:
 
 jobs:
   build:
