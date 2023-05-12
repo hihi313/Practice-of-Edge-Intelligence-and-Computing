@@ -30,7 +30,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./dockerfiles
-          file: ./dockerfiles/Dockerfile
+          context: ./docker
+          file: ./docker/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.DOCKER_IMAGE_NAME }}:${{ vars.DOCKER_IMAGE_TAG }}
