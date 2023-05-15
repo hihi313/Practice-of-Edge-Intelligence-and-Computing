@@ -1,0 +1,3 @@
+[submodule "models/superpoint"]
+	path = models/superpoint
+	url = https://github.com/hihi313/pytorch-superpoint.git
