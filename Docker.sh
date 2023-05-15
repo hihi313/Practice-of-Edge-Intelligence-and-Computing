@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Sart time=$(date +"%T")"
-IMG_USER=""
+IMG_USER="hihi313"
 IMG_NAME="edge-ai"
 IMG_TAG="openvino"
 CTNR_NAME="${IMG_NAME}_ctnr"
