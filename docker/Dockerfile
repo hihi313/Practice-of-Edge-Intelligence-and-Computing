@@ -15,11 +15,11 @@ USER root
 
 # install apt dependencies
 RUN apt update
-# COPY ./${APT_PKGS} ./
-# RUN xargs apt install \
-#     --yes \
-#     --no-install-recommends \
-#     < ${APT_DPDS}
+COPY ./${APT_PKGS} ./
+RUN xargs apt install \
+    --yes \
+    --no-install-recommends \
+    < ${APT_DPDS}
 
 # install python dependencies
 COPY ./${PY_DPDS} ./
