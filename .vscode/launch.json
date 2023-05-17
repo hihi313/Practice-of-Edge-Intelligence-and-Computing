@@ -5,16 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Superpoint testing",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "/app/superpoint_testing.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
                 "/datasets/VSLAM/TartanAir/carwelding_sample_P007/Easy/P007/image_left",
                 "--H" , "240",
                 "--W" , "320",
+                "--weights_path", "/app/logs/superpoint_coco/checkpoints/superPointNet_80000_checkpoint.pth.tar",
             ]
         }
     ]
