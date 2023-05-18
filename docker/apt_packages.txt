@@ -1,1 +1,1 @@
-qt5-default
+python3-pyqt5
