@@ -1,4 +1,4 @@
-openvino-dev[tensorflow2,onnx,pytorch]==2022.1.0
-torch==1.8.1+cu111
-torchvision==0.9.1+cu111
-matplotlib
+openvino-dev[tensorflow2,onnx,pytorch]~=2022.3.0
+matplotlib~=3.7.1
+torch~=1.13.0+cu116
+torchvision~=0.14.0+cu116

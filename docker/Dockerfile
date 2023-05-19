@@ -1,4 +1,4 @@
-FROM openvino/ubuntu20_dev_no_samples:2022.1.0
+FROM ubuntu:20.04
 
 # setup environment
 ENV LANG C.UTF-8
@@ -26,8 +26,7 @@ COPY ./${PY_DPDS} ./
 RUN python3 -m pip install --upgrade pip \
     && python3 -m pip install \
     --no-cache-dir \
-    # --extra-index-url https://download.pytorch.org/whl/cu117 \
-    --find-links https://download.pytorch.org/whl/torch_stable.html \
+    --extra-index-url https://download.pytorch.org/whl/cu116 \
     --requirement ${PY_DPDS}
 
 # Clean up
@@ -36,7 +35,7 @@ RUN apt autoremove --purge \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # setup entrypoint
-# COPY ./ros_entrypoint.sh /
+# COPY ./entrypoint.sh /
 # ENTRYPOINT ["/entrypoint.sh"]
 
 WORKDIR /app
