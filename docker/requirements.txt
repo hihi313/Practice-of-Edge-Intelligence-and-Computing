@@ -1,4 +1,4 @@
 openvino-dev[tensorflow2,onnx,pytorch]~=2022.3.0
 matplotlib~=3.7.1
-torch~=1.13.0+cu116
-torchvision~=0.14.0+cu116
+torch==1.13.0+cu116
+torchvision==0.14.0+cu116
