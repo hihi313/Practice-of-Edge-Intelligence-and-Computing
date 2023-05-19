@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "Superpoint testing",
             "type": "python",
             "request": "launch",
@@ -13,11 +21,13 @@
             "justMyCode": true,
             "args": [
                 "/datasets/VSLAM/TUM-VI/exported/euroc/512_16/dataset-corridor1_512_16/mav0/cam0/data",
-                "--H" , "240",
-                "--W" , "320",
-                "--cuda",
+                "--H", "240",
+                "--W", "320",
+                // "--cuda",
+                "--cv_kp",
+                // "--show_extra",
                 "--weights_path", "/app/models/superPointNet_80000_checkpoint.pth.tar",
-                // "--onnx_path", "/app/models/tmp.onnx",
+                // "--onnx_path", "/app/models/superpoint.onnx",
                 // "--ir_path", "/app/models/tmp/tmp.xml",
             ]
         }

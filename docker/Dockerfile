@@ -26,7 +26,8 @@ COPY ./${PY_DPDS} ./
 RUN python3 -m pip install --upgrade pip \
     && python3 -m pip install \
     --no-cache-dir \
-    --extra-index-url https://download.pytorch.org/whl/cu117 \
+    # --extra-index-url https://download.pytorch.org/whl/cu117 \
+    --find-links https://download.pytorch.org/whl/torch_stable.html \
     --requirement ${PY_DPDS}
 
 # Clean up
