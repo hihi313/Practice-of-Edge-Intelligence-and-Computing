@@ -196,6 +196,9 @@ def cv_match(query_desc:np.ndarray, train_desc:np.ndarray, ratio: float=0.7):
     index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
     search_params = dict(checks = 50)
     flann = cv2.FlannBasedMatcher(index_params, search_params)
+    K = 2
+    if len(query_desc) < K or len(train_desc) < K:
+        return np.array([])
     matches = flann.knnMatch(query_desc,train_desc,k=2)
     # store all the good matches as per Lowe's ratio test.
     good = []
@@ -310,6 +313,8 @@ if __name__ == '__main__':
                 sift = cv2.SIFT_create()
                 # find the keypoints and descriptors with SIFT
                 pts, desc = sift.detectAndCompute(img_c,None)
+                if len(pts) == 0:
+                    desc = []
             end_net = time.time()
 
             # Post processing, Get points and descriptors.
@@ -362,7 +367,7 @@ if __name__ == '__main__':
             # matches = tracker.update(pts, desc)
             
             # log["match_prec"] = float(matches.shape[1]) / float(pts.shape[1])
-            log["match_prec"] = float(len(matches)) / float(len(cv_kp_c))
+            log["match_prec"] = float(len(matches)) / float(len(cv_kp_c)) if len(cv_kp_c) > 0 else 0
             log["num_kp"] = len(cv_kp_c)
             log_dict(log)
             pd_rows.append(copy.deepcopy(log))
