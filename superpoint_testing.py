@@ -275,7 +275,8 @@ if __name__ == '__main__':
         tracker = PointTracker(args.max_length, nn_thresh=args.nn_thresh)
         # Create a window to display the demo.
         win = 'SuperPoint Tracker'
-        cv2.namedWindow(win)
+        if not args.colab:
+            cv2.namedWindow(win)
         # Font parameters for visualizaton.
         font = cv2.FONT_HERSHEY_DUPLEX
         font_clr = (255, 255, 255)
