@@ -421,9 +421,9 @@ if __name__ == '__main__':
                     out, (args.display_scale*out.shape[1], args.display_scale*out.shape[0]))
 
                 # Display visualization image to screen.
-                try:
+                if not args.colab:
                     cv2.imshow(win, out)
-                except ValueError:
+                else:
                   # For Colab, DisabledFunctionError inherit from ValueError
                   cv2_imshow(out)
                 
