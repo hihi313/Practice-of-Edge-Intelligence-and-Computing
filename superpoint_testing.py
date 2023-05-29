@@ -58,6 +58,8 @@ def get_args():
                         help='OpenCV waitkey time in ms (default: 1).')
     parser.add_argument('--cuda', action='store_true',
                         help='Use cuda GPU to speed up network processing speed (default: False)')
+    parser.add_argument('--colab', action='store_true',
+                        help='Use google colab\' cv_imshow()')
     parser.add_argument('--no_display', action='store_true',
                         help='Do not display images to screen. Useful if running remotely (default: False).')
     parser.add_argument('--write', action='store_true',
@@ -225,6 +227,10 @@ def draw_matches(img_query, img_train, kp_query, kp_train, matches, alpha: float
 if __name__ == '__main__':
     with torch.no_grad():
         args = get_args()
+
+        # For Colab
+        if args.colab:
+            from google.colab.patches import cv2_imshow
 
         CSV_FILE = Path(f"./output_{datetime.now():%Y%m%d_%H%M}.csv")
 
@@ -414,7 +420,12 @@ if __name__ == '__main__':
                     out, (args.display_scale*out.shape[1], args.display_scale*out.shape[0]))
 
                 # Display visualization image to screen.
-                cv2.imshow(win, out)
+                try:
+                    cv2.imshow(win, out)
+                except ValueError:
+                  # For Colab, DisabledFunctionError inherit from ValueError
+                  cv2_imshow(out)
+                
                 key = cv2.waitKey(args.waitkey) & 0xFF
                 if key == ord('q'):
                     print('Quitting, \'q\' pressed.')

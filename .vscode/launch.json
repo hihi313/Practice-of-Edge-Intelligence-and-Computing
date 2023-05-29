@@ -20,13 +20,14 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "/datasets/VSLAM/OIVIO/OD_015_HH_03/handheld0/cam0/data",
+                "/datasets/VSLAM/HISLAB/EE7/ee_map_good_01",
                 "--H", "240",
                 "--W", "320",
-                // "--cuda",
-                "--cv_kp",
+                "--cuda",
+                // "--colab",
+                // "--cv_kp",
                 "--show_extra",
-                // "--weights_path", "/app/models/superPointNet_80000_checkpoint.pth.tar",
+                "--weights_path", "/app/models/superPointNet_80000_checkpoint.pth.tar",
                 // "--onnx_path", "/app/models/superpoint.onnx",
                 // "--ir_path", "/app/models/superpoint_openvino/superpoint.xml",
             ]
