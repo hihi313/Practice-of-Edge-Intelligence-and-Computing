@@ -16,11 +16,38 @@
 <!-- 
 這部份以100~200字，說明創作理念、硬體架構、模型選用、訓練成效、優化過程及最終結果比較。 -->
 
+## 創作理念
+
+### VSLAM
+
+視覺SLAM（Visual SLAM）系統是一種使用圖像資訊(Visual)進行同時定位與地圖構建(SLAM, Simutaniously Localization And Mapping)的技術。它通過分析如輸入圖像的特徵等資訊，估計相機的/無人機/自駕車的位置並同時建立周圍環境的地圖。視覺SLAM廣泛應用於導航(尤其是無地圖資料時，可用於初步地建立地圖)、AR、VR等領域。
+
+* 優勢：使用相對便宜且常見的相機感測器進行環境感知。
+* 劣勢: 對環境變化敏感。VSLAM的性能易受傳統電腦視覺中常見的問題而影像其定位或是建圖的性能。例如，光照變化、場景結構變化或動態物體的存在可能使得特徵點提取和匹配變得困難。
+
+### 深度學習特徵點提取
+
+相對於傳統的手工設計特徵提取方法，深度學習特徵點提取具有以下優勢：
+
+1. 可從大量數據中學習到更具判別性和鑑別性的特徵描述子。
+2. 不依賴於先驗知識，能夠自動學習適應不同任務，更具泛化能力。
+
+在VSLAM的應用中，傳統的視覺SLAM方法依賴於手工設計的特徵，如SIFT或ORB等，但他們容易受到環境變化的影響，導致定位和地圖構建的不穩定性。深度學習特徵點提取通過學習適應性的特徵表示，能夠更好地應對環境變化，提高視覺SLAM系統的robustness和準確性。
+
 # 3. 系統簡介
 
 <!-- 
 至少一張結果示意影像作為代表圖示。
 -->
+
+<figure>
+
+![SuperPoint](https://media.arxiv-vanity.com/render-output/6545001/x1.png)
+
+<figcaption>SuperPoint: 全卷積神經網絡，可同時計算 2D 興關鍵點位置和描述子</figcaption>
+
+</figure>
+
 
 ## 3.1 創作發想
 
@@ -28,7 +55,11 @@
 請簡單說明為何創作（如受某篇論文或某項網路作品激發、生活上常遇到問題、市場缺乏對應解決方案等等）
 預期解決何種問題（分類、物件偵測、影像分割、時序預測、人臉辨識、姿態估測、模型壓縮等）及目前存在解決方案及不足的地方。
 預期系統完成後可達目標（如節省人力、提高辨識精度、改善生活等等）
- -->
+-->
+
+傳統的特徵(點)提取方式容易受到光線變化的影響，如：動態的光照(閃爍的燈光、機載光源(onboard illumination))、較強的雜訊等。希望藉由深度學習的技術來讓所提取的特徵在光照變化的環境下更加穩定，並減少誤匹配的情況發生。
+
+期望能藉由深度學習特徵點提取模型(SuperPoint)搭配之後的 SLAM 演算法研究，使的整體 VSLAM 演算法的表現、robustness 能夠比以往的演算法更佳。
 
 ## 3.2 軟硬體架構
 
@@ -36,11 +67,72 @@
 說明使用硬體（如筆電、網路攝影機、麥克風、樹莓派、Jetson Nano、Arduino Nano 33 BLE Sense及其它各種輸入、輸出裝置或通訊界面等等）、連接方式及軟體階層說明等。
 -->
 
+Trainging Hardware:
+
+|Hardware type|Model/Spec|
+|---|---|
+|Memory|32GB|
+|CPU|i7-11700 @ 2.5GHz|
+|GPU|NVIDIA GeForce RTX 3090| 
+
+Software environment: 
+
+Host: 
+
+|Software|Version|
+|---|---|
+|NVIDIA GPU Driver(`nvidia.ko`)|470.182.03|
+|CUDA Driver(`libcuda.so`)|470.182.03|
+|NVIDIA Container toolkit(`nvidia-ctk`)|1.13.1| 
+|Docker| 20.10.21|
+
+
+Container: 
+* Based on `nvidia/cuda:11.3.1-cudnn8-runtime-ubuntu20.04`
+* [Dockerfile](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/docker/Dockerfile)
+
+|Software|Dependencies|
+|---|---|
+|apt|[apt_packages.text](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/docker/apt_packages.txt)|
+|pip|[requirements](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/docker/requirements.txt)|
+
 ## 3.3 工作原理及流程
 
 <!-- 
 簡述輸入及輸出架構（如使用網路攝影機作為輸入，經過XXX硬體計算後，在螢幕或其它輸出裝置顯示結果），最好能給出一張簡單流程圖。
 -->
+
+
+```mermaid
+flowchart LR
+    subgraph prev["Previous frame"]
+        direction LR
+        img_p[<img src='https://picsum.photos/seed/picsum/50' />]--> SP_p["SuperPoint"]
+        SP_p --> desc_p["Descriptor"]
+        SP_p --> kp_p["Keypoint"]
+    end
+    subgraph cur["Current frame"]
+        direction LR
+        img[<img src='https://picsum.photos/seed/picsum/50' />]--> SP["SuperPoint"]
+        SP --> desc["Descriptor"]
+        SP --> kp["Keypoint"]
+    end
+    desc_p --> match["OpenCV match"]
+    desc --> match
+    kp_p --> imshow
+    match -- match info --> imshow["imshow()"]
+    kp --> imshow 
+```
+
+測試方式為: 在一個迴圈內，對目前的輸入圖像輸入至 SuperPoint 深度學習特徵提取網路內，經由網路(和後處理後)提取特徵點的位置以及其對應描述子。經過轉換後直接使用 OpenCV 的(任意)特徵批配方法，以描述子 L2 距離取最接近的作為批配的點。最後再經由 OpenCV 將批配的結果畫在當前幀以及前一幀上。
+
+<figure>
+
+![asdf](./src_md/superpoint_tr924_202208031659.png)
+
+<figcaption>SuperPoint 在自行錄製的資料集上進行推論，經 OpenCV 批配的結果</figcaption>
+
+</figure>
 
 ## 3.4 資料集建立方式
 
@@ -48,6 +140,44 @@
 說明如何建置資料集，是採用公開或自定義資料集。
 如何收集資料集及資料集數量統計說明
 -->
+
+### 資料蒐集
+
+<figure>
+
+![ee7](./src_md/ee7_000000000079.png)
+
+<figcaption>台科 EE 7 樓錄製的資料序列</figcaption>
+
+</figure>
+
+<figure>
+
+![tr9](./src_md/tr9_000000000074.png)
+
+<figcaption>台科 TR 9 樓錄製的資料序列</figcaption>
+
+</figure>
+
+
+預訓練模型使用 MS-COCO 2014 資料集，並取訓練90000 個 epoch 的模型作為預訓練模型 fine-tune。Fine-tune 模型則使用自建資料集，蒐集台科 TR 9 樓 和 EE 大樓 7 樓的場景
+
+自建資料集: 
+* 主要使用樹梅派的(魚眼)相機進行錄製，如上圖
+* 手動分成訓練、驗證、測試資料集，以符合 COCO 資料集的格式。比例分別約為 8:1:1
+* 訓練資料數量: 3970
+* 驗證資料數量: 496
+* 測試資料數量: 501
+
+### 資料標注
+
+<figure>
+
+![tr9](https://media.arxiv-vanity.com/render-output/6545001/x2.png)
+
+<figcaption>台科 TR 9 樓錄製的資料序列</figcaption>
+
+</figure>
 
 ## 3.5 模型選用與訓練
 
@@ -63,6 +193,9 @@
 <!-- 
 說明基本實驗結果及對比其它模型或解決方案的差異。
 -->
+
+TODO: test on tr9 or ee7
+TOTO: test on laptop
 
 ## 4.2 改進與優化
 
