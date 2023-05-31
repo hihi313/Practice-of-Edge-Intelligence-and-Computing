@@ -15,6 +15,7 @@ import cv2
 import numpy as np
 import torch
 import torch.nn.functional as F
+from torch.utils.tensorboard import SummaryWriter
 
 
 def get_args():
@@ -232,7 +233,8 @@ if __name__ == '__main__':
         if args.colab:
             from google.colab.patches import cv2_imshow
 
-        CSV_FILE = Path(f"./output_{datetime.now():%Y%m%d_%H%M}.csv")
+        CSV_FILE = Path(f"./output/output_{datetime.now():%Y%m%d_%H%M}.csv")
+        writer = SummaryWriter('./runs/test')
 
         # This class helps load input images from different sources.
         vs = VideoStreamer(args.input, args.camid, args.H,
@@ -323,6 +325,12 @@ if __name__ == '__main__':
                 if len(pts) == 0:
                     desc = []
             end_net = time.time()
+
+            # Draw model architecture 
+            # model_traced = torch.jit.trace(superpoint, inp, strict=False)
+            # out_traced = model_traced(inp)
+            # writer.add_graph(model_traced, out_traced)
+            # writer.close()
 
             # Post processing, Get points and descriptors.
             start_post = time.time()

@@ -20,10 +20,11 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "/datasets/VSLAM/HISLAB/EE7/ee_map_good_01",
+                // "/datasets/VSLAM/HISLAB/EE7/ee_map_good_01",
+                "/datasets/COCO/test",
                 "--H", "240",
                 "--W", "320",
-                "--cuda",
+                // "--cuda",
                 // "--colab",
                 // "--cv_kp",
                 "--show_extra",

@@ -40,13 +40,15 @@
 至少一張結果示意影像作為代表圖示。
 -->
 
-<figure>
+<!-- <figure>
 
 ![SuperPoint](https://media.arxiv-vanity.com/render-output/6545001/x1.png)
 
 <figcaption>SuperPoint: 全卷積神經網絡，可同時計算 2D 興關鍵點位置和描述子</figcaption>
 
-</figure>
+</figure> -->
+
+TODO: draw pic like this
 
 
 ## 3.1 創作發想
@@ -180,7 +182,29 @@ flowchart LR
 
 </figure>
 
+<figure>
 
+![Homographic adaptaion](https://media.arxiv-vanity.com/render-output/6545001/x5.png)
+
+<figcaption>Homographic adaptaion 示意圖</figcaption>
+
+</figure>
+
+Superpoint 論文中的自監督資料標注流程:
+
+1. 生成虛擬/合成影像，並將已知的角/特徵點作為 ground truth 並訓練 SuperPoint 網路中的 detector
+    * 不訓練 descriptor，即網路下半部，論文中稱此網路為 magicpoint
+    * 生成如: 棋盤格、點、線段、2D/3D 多面體等，並在背景加入一些 noise 以提高 robustness
+2. 因用虛擬影像訓練的網路在真實世界的泛化能力不足，因此透過如: Homography 等變換方式，將同張真實世界的圖經變換後所找到的所有點作為此張圖的特徵點 ground truth
+    * 論文中稱為: homographic adaptation
+    * 論文中稱生成的 groud truth 為: pseudo ground truth
+3. 利用前步驟自監督生成的 ground truth，將真實圖像經變換(如: homography, Gaussian blur 等)，同時訓練全部網路(訓練 point detector 以及 point descriptor extractor)
+
+實際標注流程: 
+
+1. 第一部份直接使用預訓練的網路(magicpoint)
+2. 使用預訓練 magicpoint 生成自建資料集的 pseudo ground truth
+3. 使用自建資料集的圖片與 pseudo ground truth 對預訓練的網路進行 fine-tune
 
 ## 3.5 模型選用與訓練
 
@@ -188,6 +212,46 @@ flowchart LR
 簡述使用公開模型或自定義模型原因
 是否重新訓練及相關參數設定等
 -->
+
+<figure>
+
+![SuperPoint architecture in paper](https://media.arxiv-vanity.com/render-output/6545001/x3.png)
+
+<figcaption>論文中的 SuperPoint 架構圖</figcaption>
+
+</figure>
+
+<details>
+
+<summary>實際模型架構，用 tensorboard 繪製 (圖大)</summary>
+
+<figure>
+
+![SuperPoint architecture](./src_md/SuperPoint%20arch.png)
+
+<figcaption>SuperPoint 架構</figcaption>
+
+</figure>
+
+<figure>
+
+![SuperPoint architecture](./src_md/SuperPoint%20arch%20inconv.png)
+
+<figcaption>incvon block 架構</figcaption>
+
+</figure>
+
+<figure>
+
+![SuperPoint architecture](./src_md/SuperPoint%20arch%20down.png)
+
+<figcaption>down block 架構</figcaption>
+
+</figure>
+
+</details>
+
+
 
 # 4. 實驗結果
 
@@ -198,6 +262,7 @@ flowchart LR
 -->
 
 TODO: test on tr9 or ee7
+
 TOTO: test on laptop
 
 ## 4.2 改進與優化
