@@ -104,16 +104,17 @@ Container:
 
 
 ```mermaid
+%%{init: { 'securityLevel': 'antiscript'} }%%
 flowchart LR
-    subgraph prev["Previous frame"]
+    subgraph prev["t-1"]
         direction LR
-        img_p[<img src='https://picsum.photos/seed/picsum/50' />]--> SP_p["SuperPoint"]
+        img_p[<img src='https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/tr9_000000000074.png?raw=true' width='100' /> Previous frame]--> SP_p["SuperPoint"]
         SP_p --> desc_p["Descriptor"]
         SP_p --> kp_p["Keypoint"]
     end
-    subgraph cur["Current frame"]
+    subgraph cur["t"]
         direction LR
-        img[<img src='https://picsum.photos/seed/picsum/50' />]--> SP["SuperPoint"]
+        img[<img src='https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/tr9_000000000074.png?raw=true'  width='100' /> Current frame]--> SP["SuperPoint"]
         SP --> desc["Descriptor"]
         SP --> kp["Keypoint"]
     end
@@ -128,7 +129,7 @@ flowchart LR
 
 <figure>
 
-![asdf](./src_md/superpoint_tr924_202208031659.png)
+![SuperPoint testing](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/superpoint_tr924_202208031659.png?raw=true)
 
 <figcaption>SuperPoint 在自行錄製的資料集上進行推論，經 OpenCV 批配的結果</figcaption>
 
@@ -145,7 +146,7 @@ flowchart LR
 
 <figure>
 
-![ee7](./src_md/ee7_000000000079.png)
+![ee7](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/ee7_000000000079.png?raw=true)
 
 <figcaption>台科 EE 7 樓錄製的資料序列</figcaption>
 
@@ -153,7 +154,7 @@ flowchart LR
 
 <figure>
 
-![tr9](./src_md/tr9_000000000074.png)
+![tr9](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/tr9_000000000074.png?raw=true)
 
 <figcaption>台科 TR 9 樓錄製的資料序列</figcaption>
 
@@ -173,11 +174,13 @@ flowchart LR
 
 <figure>
 
-![tr9](https://media.arxiv-vanity.com/render-output/6545001/x2.png)
+![SuperPoint training pipeline](https://media.arxiv-vanity.com/render-output/6545001/x2.png)
 
-<figcaption>台科 TR 9 樓錄製的資料序列</figcaption>
+<figcaption>SuperPoint 自監督資料標注/訓練流程</figcaption>
 
 </figure>
+
+
 
 ## 3.5 模型選用與訓練
 
