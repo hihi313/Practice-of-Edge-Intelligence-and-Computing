@@ -163,7 +163,7 @@ flowchart LR
 </figure>
 
 
-預訓練模型使用 MS-COCO 2014 資料集，並取訓練90000 個 epoch 的模型作為預訓練模型 fine-tune。Fine-tune 模型則使用自建資料集，蒐集台科 TR 9 樓 和 EE 大樓 7 樓的場景
+預訓練模型使用 MS-COCO 資料集，並取其做 fine-tune。Fine-tune 模型則使用自建資料集，蒐集台科 TR 9 樓 和 EE 大樓 7 樓的場景
 
 自建資料集: 
 * 主要使用樹梅派的(魚眼)相機進行錄製，如上圖
@@ -200,11 +200,37 @@ Superpoint 論文中的自監督資料標注流程:
     * 論文中稱生成的 groud truth 為: pseudo ground truth
 3. 利用前步驟自監督生成的 ground truth，將真實圖像經變換(如: homography, Gaussian blur 等)，同時訓練全部網路(訓練 point detector 以及 point descriptor extractor)
 
+
+<figure>
+
+![MS-COCO val2017 #724 label](./src_md/000000000724.png)
+
+<figcaption>使用預訓練 magicpoint 網路在 MS-COCO val2017 資料集的圖片進行 Self-supervise 產生的 label</figcaption>
+
+</figure>
+
+
 實際標注流程: 
 
-1. 第一部份直接使用預訓練的網路(magicpoint)
-2. 使用預訓練 magicpoint 生成自建資料集的 pseudo ground truth
+1. 第一部份直接使用預[訓練的網路](https://github.com/eric-yyjau/pytorch-superpoint/blob/master/logs/magicpoint_synth_t2/checkpoints/superPointNet_100000_checkpoint.pth.tar)(magicpoint)
+2. 使用[預訓練 magicpoint](https://github.com/eric-yyjau/pytorch-superpoint/blob/master/logs/magicpoint_synth_t2/checkpoints/superPointNet_100000_checkpoint.pth.tar) 生成自建資料集的 pseudo ground truth
 3. 使用自建資料集的圖片與 pseudo ground truth 對預訓練的網路進行 fine-tune
+
+<figure>
+
+![ee7_000000000199](./src_md/ee7_000000000199.png)
+
+<figcaption>使用預訓練 magicpoint 網路在自行錄製資料集(EE7)標記的 label</figcaption>
+
+</figure>
+
+<figure>
+
+![tr9_000000002920](./src_md/tr9_000000002920.png)
+
+<figcaption>使用預訓練 magicpoint 網路在自行錄製資料集(TR9)標記的 label</figcaption>
+
+</figure>
 
 ## 3.5 模型選用與訓練
 
@@ -212,6 +238,8 @@ Superpoint 論文中的自監督資料標注流程:
 簡述使用公開模型或自定義模型原因
 是否重新訓練及相關參數設定等
 -->
+
+### 模型
 
 <figure>
 
@@ -227,7 +255,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![SuperPoint architecture](./src_md/SuperPoint%20arch.png)
+![SuperPoint architecture](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/SuperPoint%20arch.png?raw=true)
 
 <figcaption>SuperPoint 架構</figcaption>
 
@@ -235,7 +263,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![SuperPoint architecture](./src_md/SuperPoint%20arch%20inconv.png)
+![SuperPoint architecture](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/SuperPoint%20arch%20inconv.png?raw=true)
 
 <figcaption>incvon block 架構</figcaption>
 
@@ -243,7 +271,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![SuperPoint architecture](./src_md/SuperPoint%20arch%20down.png)
+![SuperPoint architecture](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/SuperPoint%20arch%20down.png?raw=true)
 
 <figcaption>down block 架構</figcaption>
 
@@ -251,7 +279,20 @@ Superpoint 論文中的自監督資料標注流程:
 
 </details>
 
+### 訓練
 
+共分為 2 部份/步驟做訓練: 
+
+1. 使用在 MS COCO dataset 預訓練的 SuperPoint 網路
+2. Fine-tune 使用自建資料集
+
+<figure>
+
+![SuperPoint architecture](./src_md/loss_COCO%20and%20fine-tune.png)
+
+<figcaption>訓練 loss。灰色: 使用 COCO dataset，橘色: 使用自建資料集</figcaption>
+
+</figure>
 
 # 4. 實驗結果
 
@@ -263,7 +304,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 TODO: test on tr9 or ee7
 
-TOTO: test on laptop
+TODO: test on laptop
 
 ## 4.2 改進與優化
 
@@ -281,9 +322,21 @@ TOTO: test on laptop
 外部資料集及標註檔
 -->
 
+1. [Superpoint: Self-supervised interest point detection and description](https://openaccess.thecvf.com/content_cvpr_2018_workshops/w9/html/DeTone_SuperPoint_Self-Supervised_Interest_CVPR_2018_paper.html)
+2. [MS-COCO val2017](https://images.cocodataset.org/zips/val2017.zip)
+3. [eric-yyjau / pytorch-superpoint](https://github.com/eric-yyjau/pytorch-superpoint)
+    * 用於訓練
+4. [magicleap/SuperPointPretrainedNetwork](https://github.com/magicleap/SuperPointPretrainedNetwork)
+    * 參考後處理以及顯示結果 code
+5. [magicleap/SuperGluePretrainedNetwork](https://github.com/magicleap/SuperGluePretrainedNetwork)
+    * 參考後處理 code
+
 # 7. 附錄
 
 <!-- 
 公開源碼連結
 其它說明內容
 -->
+
+1. [https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing)
+2. [https://github.com/hihi313/pytorch-superpoint/tree/master](https://github.com/hihi313/pytorch-superpoint/tree/master)

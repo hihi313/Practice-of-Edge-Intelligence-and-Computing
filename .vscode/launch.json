@@ -28,7 +28,7 @@
                 // "--colab",
                 // "--cv_kp",
                 "--show_extra",
-                "--weights_path", "/app/models/superPointNet_80000_checkpoint.pth.tar",
+                "--weights_path", "/app/models/superpoint_35k_finetune.pth.tar",
                 // "--onnx_path", "/app/models/superpoint.onnx",
                 // "--ir_path", "/app/models/superpoint_openvino/superpoint.xml",
             ]
