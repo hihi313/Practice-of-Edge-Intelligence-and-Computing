@@ -1,3 +1,8 @@
+#!/bin/bash
+
+# VSCode's launch.json doesn't support setting & getting (env) variable immedietly
+# So use this shell script to test superpoint conviniently
+
 TEST_PY="superpoint_testing.py"
 MODEL="superpoint_35k_finetune"
 DATASET="/datasets/VSLAM/HISLAB/EE7/ee_map_good_01"
@@ -6,6 +11,7 @@ W=320
 SHOW="--show_extra"
 GPU=""
 
+set -x
 while getopts "m:sciot:" opt
 do
   case $opt in
@@ -50,6 +56,7 @@ do
         ;;
   esac
 done
+set +x
 
 # python3 superpoint_testing.py             
                 # // "/datasets/VSLAM/HISLAB/EE7/ee_map_good_01",

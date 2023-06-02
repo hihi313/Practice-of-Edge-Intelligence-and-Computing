@@ -303,4 +303,13 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,linux,visualstudiocode,python,jupyternotebooks,cuda,git
 
 *.csv
-**/openvino_notebook/
+*.xlsx
+output/
+
+run?/
+openvino_notebook/
+
+# Don't need to save converted output model
+*.onnx
+# except for submodule superpoint
+models/superpoint_*

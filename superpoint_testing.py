@@ -270,6 +270,7 @@ if __name__ == '__main__':
             "total_time": 0,
             "num_kp": 0,
             "match_prec": 0,
+            "outlier_prec": 0,
         }
         pd_rows = []
 
@@ -285,11 +286,9 @@ if __name__ == '__main__':
         font_pt = (4, 12)
         font_sc = 0.4
 
-        img_p = None
-        cv_kp_c = None
-        cv_des_c = None
-        cv_kp_p = None
-        cv_des_p = None
+        img_p = img_c = None
+        cv_kp_p = cv_kp_c = None
+        cv_des_p = cv_des_c = None
         while True:
 
             start = time.time()
@@ -344,13 +343,8 @@ if __name__ == '__main__':
 
             end = time.time()
 
-            log["image"] = vs.i
-            log["pre_time"] = end_pre - start_pre
-            log["net_time"] = end_net - start_net
-            log["post_time"] = end_post - start_post
-            log["total_time"] = end - start
 
-            # Visualization
+            # Convert to OpenCV format
             cv_kp_c, cv_des_c = pts, desc
             if not args.cv_kp:
                 # Get first from batch
@@ -358,72 +352,51 @@ if __name__ == '__main__':
                 scores = scores[0].cpu()
                 desc = desc[0].cpu()
                 heatmap = heatmap[0].cpu()
-                # Reshape to display
-                pts = torch.cat((pts, scores[None].T), dim=1).numpy()
+                # To numpy
+                pts = torch.cat((pts, scores[None].T), dim=1).numpy() # (x, y, score), Reshape to display
                 desc = desc.numpy()
                 heatmap = heatmap.numpy()
                 # current keypoints
                 cv_kp_c, cv_des_c = convert2CVKeypoint(pts, desc)
 
-            # draw matches with previous frame
+            # Matching
             out = img_c
             matches = np.zeros((1, 1))
+            num_outliers = 0
             if cv_des_p is not None and cv_kp_p is not None and img_p is not None:
-                matches = cv_match(cv_des_c, cv_des_p)
+                matches = cv_match(cv_des_c, cv_des_p) #query: current, train: previous
                 if args.show_extra:
                     out = draw_matches(img_c, img_p, cv_kp_c, cv_kp_p, matches)
-
-            # Update previous data
-            cv_kp_p = cv_kp_c
-            cv_des_p = cv_des_c
-            img_p = img_c
-
-            # Add points and descriptors to the tracker.
-            # matches = tracker.update(pts, desc)
             
-            # log["match_prec"] = float(matches.shape[1]) / float(pts.shape[1])
+                # Outlier, by epipolar constraint & RANSAC
+                # Convert matches to 2 N*2 array
+                kp_c = []
+                kp_p = []
+                for m in matches:
+                    kp_c.append(cv_kp_c[m.queryIdx].pt)
+                    kp_p.append(cv_kp_p[m.trainIdx].pt)
+                kp_c = np.array(kp_c, dtype=np.float64)
+                kp_p = np.array(kp_p, dtype=np.float64)
+                # Find F, Accept only 2 N*2 array to represent point
+                fundamental, mask = cv2.findFundamentalMat(kp_c, kp_p,
+                                                method=cv2.FM_RANSAC, 
+                                                ransacReprojThreshold=3.0,
+                                                confidence=0.99)
+                num_outliers = np.count_nonzero(mask==0)
+
+            # Log
+            log["image"] = vs.i
+            log["pre_time"] = end_pre - start_pre
+            log["net_time"] = end_net - start_net
+            log["post_time"] = end_post - start_post
+            log["total_time"] = end - start
             log["match_prec"] = float(len(matches)) / float(len(cv_kp_c)) if len(cv_kp_c) > 0 else 0
+            log["outlier_prec"] = num_outliers / float(len(matches)) if len(matches) > 0 else 0
             log["num_kp"] = len(cv_kp_c)
             log_dict(log)
             pd_rows.append(copy.deepcopy(log))
 
-            # # Get tracks for points which were match successfully across all frames.
-            # tracks = tracker.get_tracks(args.min_length)
-
-            # # Primary output - Show point tracks overlayed on top of input image.
-            # out1 = (np.dstack((img, img, img)) * 255.).astype('uint8')
-            # # Normalize track scores to [0,1].
-            # tracks[:, 1] /= float(args.nn_thresh)
-            # tracker.draw_tracks(out1, tracks)
-            # cv2.putText(out1, 'Point Tracks', font_pt, font,
-            #             font_sc, font_clr, lineType=16)
-
-            # # Extra output -- Show current point detections.
-            # out2 = (np.dstack((img, img, img)) * 255.).astype('uint8')
-            # for pt in pts.T:
-            #     pt1 = (int(round(pt[0])), int(round(pt[1])))
-            #     cv2.circle(out2, pt1, 1, (0, 255, 0), -1, lineType=16)
-            # cv2.putText(out2, 'Raw Point Detections', font_pt,
-            #             font, font_sc, font_clr, lineType=16)
-
-            # # Extra output -- Show the point confidence heatmap.
-            # if heatmap is not None:
-            #     min_conf = 0.001
-            #     heatmap[heatmap < min_conf] = min_conf
-            #     heatmap = -np.log(heatmap)
-            #     heatmap = (heatmap - heatmap.min()) / \
-            #         (heatmap.max() - heatmap.min() + .00001)
-
-            #     out3 = myjet[np.round(
-            #         np.clip(heatmap*10, 0, 9)).astype('int'), :]
-            #     out3 = (out3*255).astype('uint8')
-            # else:
-            #     out3 = np.zeros_like(out2)
-            # cv2.putText(out3, 'Raw Point Confidences', font_pt,
-            #             font, font_sc, font_clr, lineType=16)
-
-            # # Resize final output.
-            # out = np.hstack((out1, out2, out3))
+            # Visualization
             if args.show_extra:
                 out = cv2.resize(
                     out, (args.display_scale*out.shape[1], args.display_scale*out.shape[0]))
@@ -439,5 +412,10 @@ if __name__ == '__main__':
                 if key == ord('q'):
                     print('Quitting, \'q\' pressed.')
                     break
+
+            # Update previous data
+            img_p = img_c
+            cv_kp_p = cv_kp_c
+            cv_des_p = cv_des_c
             # === End while ===
         pd.DataFrame(pd_rows).to_csv(f"{CSV_FILE}")
