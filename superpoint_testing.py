@@ -253,7 +253,7 @@ if __name__ == '__main__':
             superpoint.to(device)
             superpoint.eval()
 
-        # ONNX model
+        # ONNX / OpenVINO model
         if args.onnx_path or args.ir_path:
             ie = Core()
             model_path = args.ir_path if args.onnx_path is None else args.onnx_path

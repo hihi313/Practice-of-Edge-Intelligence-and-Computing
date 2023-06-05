@@ -24,17 +24,18 @@
             "args": [
                 // "/datasets/VSLAM/HISLAB/EE7/ee_map_good_01",
                 // "/datasets/VSLAM/OIVIO/OD_015_HH_03/handheld0/cam0/data",
-                "/datasets/VSLAM/TUM-VI/exported/euroc/512_16/dataset-corridor1_512_16/mav0/cam0/data",
+                // "/datasets/VSLAM/TUM-VI/exported/euroc/512_16/dataset-corridor1_512_16/mav0/cam0/data",
+                "/datasets/ee_map_good_01",
 
                 // "--colab",
                 "--H", "240",
                 "--W", "320",
-                "--show_extra",
-                "--cuda",
-                "--weights_path", "/app/models/superpoint_35k_finetune.pth.tar",
+                // "--show_extra",
+                // "--cuda",
+                // "--weights_path", "/app/models/superpoint_35k_finetune.pth.tar",
                 // "--cv_kp",
-                // "--onnx_path", "/app/models/superpoint_35k_finetune.onnx",
-                // "--ir_path", "/app/models/superpoint_35k_finetune/superpoint.xml",
+                "--onnx_path", "/app/models/superpoint_35k_finetune.onnx",
+                // "--ir_path", "/app/models/superpoint_35k_finetune/superpoint_35k_finetune.xml",
             ]
         }
     ],

@@ -68,11 +68,11 @@ do
         # --mount type=bind,src="",dst="" \
         # --user="$(id -u):$(id -g)" \
 
-        sudo xhost + local:docker &&
+        # sudo xhost + local:docker &&
+        sudo xhost + localhost &&
             docker run -it $RM $GPU $DISPLAY_VOLUME $VOLUME \
                 -e QT_X11_NO_MITSHM=1 \
                 -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR \
-                -p 8087:8087 \
                 -v /dev:/dev:ro \
                 -v /dev/bus/usb:/dev/bus/usb \
                 --device /dev/dri:/dev/dri \

@@ -307,7 +307,9 @@ $RECYCLE.BIN/
 output/
 
 run?/
-openvino_notebook/
+openvino_notebook?/
+PPT_Gesture_Demo/
+webcam_test.py
 
 # Don't need to save converted output model
 *.onnx
