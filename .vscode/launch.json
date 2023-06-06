@@ -22,19 +22,21 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                // "/datasets/VSLAM/HISLAB/EE7/ee_map_good_01",
+                "/datasets/COCO/test",
                 // "/datasets/VSLAM/OIVIO/OD_015_HH_03/handheld0/cam0/data",
-                // "/datasets/VSLAM/TUM-VI/exported/euroc/512_16/dataset-corridor1_512_16/mav0/cam0/data",
-                "/datasets/ee_map_good_01",
+                // "/datasets/VSLAM/TUM-VI/exported/euroc/512_16/dataset-slides3_512_16",
+                // "/datasets/ocean/Hard/P009/image_left",
 
                 // "--colab",
                 "--H", "240",
                 "--W", "320",
+                "--f_rej_th", "5",
+
                 // "--show_extra",
-                // "--cuda",
-                // "--weights_path", "/app/models/superpoint_35k_finetune.pth.tar",
+                "--cuda",
+                "--weights_path", "/app/models/.pth.tar",
                 // "--cv_kp",
-                "--onnx_path", "/app/models/superpoint_35k_finetune.onnx",
+                // "--onnx_path", "/app/models/superpoint_35k_finetune.onnx",
                 // "--ir_path", "/app/models/superpoint_35k_finetune/superpoint_35k_finetune.xml",
             ]
         }

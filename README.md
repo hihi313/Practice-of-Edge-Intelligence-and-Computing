@@ -40,16 +40,13 @@
 至少一張結果示意影像作為代表圖示。
 -->
 
-<!-- <figure>
+<figure>
 
-![SuperPoint](https://media.arxiv-vanity.com/render-output/6545001/x1.png)
+![SuperPoint](./src_md/SuperPoint.svg)
 
 <figcaption>SuperPoint: 全卷積神經網絡，可同時計算 2D 興關鍵點位置和描述子</figcaption>
 
-</figure> -->
-
-TODO: draw pic like this
-
+</figure>
 
 ## 3.1 創作發想
 
@@ -69,13 +66,22 @@ TODO: draw pic like this
 說明使用硬體（如筆電、網路攝影機、麥克風、樹莓派、Jetson Nano、Arduino Nano 33 BLE Sense及其它各種輸入、輸出裝置或通訊界面等等）、連接方式及軟體階層說明等。
 -->
 
-Trainging Hardware:
+Trainging/testing Hardware:
 
 |Hardware type|Model/Spec|
 |---|---|
 |Memory|32GB|
 |CPU|i7-11700 @ 2.5GHz|
 |GPU|NVIDIA GeForce RTX 3090| 
+
+Testing hardware 2:
+* 主要用於測試執行時間
+
+|Hardware type|Model/Spec|
+|---|---|
+|Memory|8GB/2GB swap (in container)|
+|CPU|i5-1030NG7 @ 1.1GHz|
+|GPU|-| 
 
 Software environment: 
 
@@ -127,13 +133,13 @@ flowchart LR
     kp --> imshow 
 ```
 
-測試方式為: 在一個迴圈內，對目前的輸入圖像輸入至 SuperPoint 深度學習特徵提取網路內，經由網路(和後處理後)提取特徵點的位置以及其對應描述子。經過轉換後直接使用 OpenCV 的(任意)特徵批配方法，以描述子 L2 距離取最接近的作為批配的點。最後再經由 OpenCV 將批配的結果畫在當前幀以及前一幀上。
+測試方式為: 在一個迴圈內，對目前的輸入圖像輸入至 SuperPoint 深度學習特徵提取網路內，經由網路(和後處理後)提取特徵點的位置以及其對應描述子。經過轉換後直接使用 OpenCV 的特徵匹配方法，以描述子 L2 距離取最接近的作為匹配的點。最後再經由 OpenCV 將匹配的結果畫在當前幀以及前一幀上。
 
 <figure>
 
 ![SuperPoint testing](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/superpoint_tr924_202208031659.png?raw=true)
 
-<figcaption>SuperPoint 在自行錄製的資料集上進行推論，經 OpenCV 批配的結果</figcaption>
+<figcaption>SuperPoint 在自行錄製的資料集上進行推論，經 OpenCV 匹配的結果</figcaption>
 
 </figure>
 
@@ -163,7 +169,13 @@ flowchart LR
 </figure>
 
 
-預訓練模型使用 MS-COCO 資料集，並取其做 fine-tune。Fine-tune 模型則使用自建資料集，蒐集台科 TR 9 樓 和 EE 大樓 7 樓的場景
+第一次訓練模型使用 MS-COCO val2017 資料集，並取其訓練後的模型做 fine-tune。Fine-tune 模型則使用自建資料集，蒐集台科 TR 9 樓 和 EE 大樓 7 樓的場景
+
+MS-COCO val2017 資料集: 
+* 因在參考的 [Github repo][1] 中使用的資料集(MS-COCO 2014)太大，考量到有自建資料集進行 fine-tune，且訓練時會做類似資料擴增(data augmentation) 的 homography transform，資料數量應足夠，所以選擇資料集大小較小的 MS-COCO val2017
+* 共 5000 張圖片
+* 手動分成訓練、驗證，以符合 COCO 資料集的格式。比例分別約為 8:2
+    * 考量有自建資料集，以及其他的資料集，因此沒有再分出測試資料集
 
 自建資料集: 
 * 主要使用樹梅派的(魚眼)相機進行錄製，如上圖
@@ -171,6 +183,7 @@ flowchart LR
 * 訓練資料數量: 3970
 * 驗證資料數量: 496
 * 測試資料數量: 501
+
 
 ### 資料標注
 
@@ -212,9 +225,8 @@ Superpoint 論文中的自監督資料標注流程:
 
 實際標注流程: 
 
-1. 第一部份直接使用預[訓練的網路](https://github.com/eric-yyjau/pytorch-superpoint/blob/master/logs/magicpoint_synth_t2/checkpoints/superPointNet_100000_checkpoint.pth.tar)(magicpoint)
-2. 使用[預訓練 magicpoint](https://github.com/eric-yyjau/pytorch-superpoint/blob/master/logs/magicpoint_synth_t2/checkpoints/superPointNet_100000_checkpoint.pth.tar) 生成自建資料集的 pseudo ground truth
-3. 使用自建資料集的圖片與 pseudo ground truth 對預訓練的網路進行 fine-tune
+1. 第一部份直接使用預[訓練的 magicpoint 網路](https://github.com/eric-yyjau/pytorch-superpoint/blob/master/logs/magicpoint_synth_t2/checkpoints/superPointNet_100000_checkpoint.pth.tar)
+2. 使用[預訓練 magicpoint](https://github.com/eric-yyjau/pytorch-superpoint/blob/master/logs/magicpoint_synth_t2/checkpoints/superPointNet_100000_checkpoint.pth.tar) 生成自建資料集以及 MS-COCO val2017 的 pseudo ground truth
 
 <figure>
 
@@ -283,7 +295,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 共分為 2 部份/步驟做訓練: 
 
-1. 使用在 MS COCO dataset 預訓練的 SuperPoint 網路
+1. 使用在 MS-COCO val2017 對模型做初步訓練
 2. Fine-tune 使用自建資料集
 
 <figure>
@@ -302,9 +314,124 @@ Superpoint 論文中的自監督資料標注流程:
 說明基本實驗結果及對比其它模型或解決方案的差異。
 -->
 
-TODO: test on tr9 or ee7
+> 匹配(match): 使用 OpenCV 對特徵點描述子做匹配時，使用 L2 距離作為匹配的指標，並通過 ratio test (參考自 OpenCV 的官方教學)，篩選最近距離(的描述子) < 第二近距離 0.7 倍的點，符合此條件的點才視為匹配。隱含的意思是: 相近的點的距離要夠近，不相似的點的距離需要夠遠
 
-TODO: test on laptop
+> outlier: 使用 OpenCV 以 RANSAC 方式估計 fundamental 矩陣 F。設某匹配點對於上一幀的位置 x，當前幀的位置 x'，則 $l'=x'=Fx$ (對極幾何約束(epipolar constraint)，l'為極線(epipolar line))。所以若 x 在當前幀的點位置 x' 與 l' 距離過大則視為 outlier。實驗時以參數 `--f_rej_th` 設定為 5 (除非另有標示)。
+> 另外，雖然場景中的動態物體也會讓誤差值較大。但若正確批配的話，理論上不論何種特徵提取方式都會受到影響。
+
+> `f_rej_th`: 實驗過程中發現此閥值若使用預設的 3，SuperPoint 的 `outlier_prec` 很像會比較高，故設(SuperPoint 及 SIFT 的閥值皆) 為 5。推測是因為 SuperPoint 提取的特稱點的熱點圖直接使用 `max_pool` 的方式達到 NMS 的效果，所以在精度上最多只能達到像素級別。而觀察 OpenCV SIFT 的特徵點位置輸出，則其可達到 subpixel 的精度。因為目前的目標並沒有要測試其精度，目的是找出誤差較大的誤匹配，故將此閥值調高。
+
+### 模型表現
+
+主要以 3 個資料集進行測試與比較。除了自建資料集，選擇有動態環境光(dynamic illumination)較多的場景，希望能測試深度學習方法和傳統方法之間在此情境的差距。輸入圖片大小固定為 240\*320(H\*W)。
+1. HISLAB
+    * 自建資料集中的測試資料集，與訓練資料集同一個場景(EE7, TR9)。中間**場景有切換**(第199、200幀之間)，故匹配的比例驟降，以及 outlier 比例驟升。
+2. OIVIO OD_015_HH_03
+    * 手持設備並搭載照明系統拍攝的公開資料集，主要用於測試機載照明設備所造成的動態環境光對於特徵提取的影響
+3. TartanAir ocean hard P009
+    * 電腦模擬生成的資料集。水面變化會造成水下場景光線變化。電腦生成的魚類可能會造成小區域 repeated pattern，希望也能藉此測試深度學習方法和傳統方法的差異，以及深度學習方法是否能克服此問題。
+
+因為後續希望應用在 SLAM 的系統中，所以比較的指標如下:
+
+> SuperPoint 每個序列都有測不同的版本(torch+CPU, torch+GPU, ONNX, OpenVINO)，故有多筆資料
+
+#### 匹配比例
+
+* `match_prec`
+* 越高越好
+* (與上一幀)匹配的數量/(當前幀)特徵點數量。若當前幀無特徵點則設為0(0%)
+
+<figure>
+
+![HISLAB_test-match_prec](./src_md/HISLAB_test-match_prec.png "HISLAB_test-match_prec")
+
+<figcaption>在 HISLAB 測試資料集序列上的匹配比例</figcaption>
+
+</figure>
+
+<figure>
+
+![OIVIO_OD_015_HH_03-match_prec](./src_md/OIVIO_OD_015_HH_03-match_prec.png "OIVIO_OD_015_HH_03-match_prec")
+
+<figcaption>在 OIVIO OD_015_HH_03 測試資料集序列上的匹配比例</figcaption>
+
+</figure>
+
+<figure>
+
+![TartanAir_ocean_hard_P009-match_prec](./src_md/TartanAir_ocean_hard_P009-match_prec.png "TartanAir_ocean_hard_P009-match_prec")
+
+<figcaption>在 TartanAir ocean hard P009 測試資料集序列上的匹配比例</figcaption>
+
+</figure>
+
+可以發現，透過批配時的 ratio test，SuperPoint 能夠將正例以及負例的 L2 距離拉開，進而使更多的點對批配成功。這也表明在論文中的 loss function 是有效的
+
+> 論文中的 descriptor loss: $l_d\left(\mathbf{d}, \mathbf{d}^{\prime} ; s\right)=\lambda_d * s * \max \left(0, m_p-\mathbf{d}^T \mathbf{d}^{\prime}\right) +(1-s) * \max \left(0, \mathbf{d}^T \mathbf{d}^{\prime}-m_n\right)$，$\lambda_p$ 代表負例 loss 的權重
+
+#### outlier 比例
+
+* `outlier_prec`
+* 越低越好
+* outlier 數量/匹配數量。若無匹配則設為1(100%)
+    <!-- * (部份實驗設錯為100，變成10000%。所以若有超過1(100%)者，實際意義仍為100%) -->
+
+<figure>
+
+![HISLAB_test-outlier_prec](./src_md/HISLAB_test-outlier_prec.png "HISLAB_test-outlier_prec")
+
+<figcaption>在 HISLAB 測試資料集序列上的 outlier 比例</figcaption>
+
+</figure>
+
+<figure>
+
+![OIVIO_OD_015_HH_03-outlier_prec](./src_md/OIVIO_OD_015_HH_03-outlier_prec.png "OIVIO_OD_015_HH_03-outlier_prec")
+
+<figcaption>在 OIVIO OD_015_HH_03 測試資料集序列上的 outlier 比例，都約為 10% 以內。</figcaption>
+
+</figure>
+
+<figure>
+
+![TartanAir_ocean_hard_P009-outlier_prec](./src_md/TartanAir_ocean_hard_P009-outlier_prec.png "TartanAir_ocean_hard_P009-outlier_prec")
+
+<figcaption>在 TartanAir ocean hard P009 測試資料集序列上的 outlier 比例</figcaption>
+
+</figure>
+
+除了一般光線的環境下，不論是用深度學習方法或是傳統方法，outlier 的比例都差不多。但到了環境光變化較大的序列則體現深度學習方法的優勢。
+
+#### 特徵點數量
+
+* `num_kp`
+* 一般情況下通常不會參考，因為 SuperPoint 模型架構的設計方式基本上最多每 8\*8 個 pixel 取一個特徵點，故特徵點數量相較於比較對象 SIFT 可能會比較少。但若 SuperPoint 提取特徵點數量明顯多於 SIFT ，則表示在這些場景下，SuperPoint 仍能有效提取場中的特徵。
+
+<figure>
+
+![HISLAB_test-num_kp](./src_md/HISLAB_test-num_kp.png "HISLAB_test-num_kp")
+
+<figcaption>在 HISLAB 測試資料集序列上的特徵點數量</figcaption>
+
+</figure>
+
+<figure>
+
+![OIVIO_OD_015_HH_03-num_kp](./src_md/OIVIO_OD_015_HH_03-num_kp.png "OIVIO_OD_015_HH_03-num_kp")
+
+<figcaption>在 OIVIO OD_015_HH_03 測試資料集序列上的特徵點數量</figcaption>
+
+</figure>
+
+<figure>
+
+![TartanAir_ocean_hard_P009-num_kp](./src_md/TartanAir_ocean_hard_P009-num_kp.png "TartanAir_ocean_hard_P009-num_kp")
+
+<figcaption>在 TartanAir ocean hard P009 測試資料集序列上的特徵點數量</figcaption>
+
+</figure>
+
+在 TartanAir ocean 的環境下，傳統方式表現較差。推測是因為對比度較低，故傳統方法無法在沒有 histogram equalization 前處理下提取特徵。
 
 ## 4.2 改進與優化
 
@@ -312,6 +439,26 @@ TODO: test on laptop
 如原來使用Nvidia GPU+PyTorch結果和經Intel OpenVINO優化後，模型壓縮大小、推論精度與速度比較。
 或以不同參數找出最佳解過程。
 -->
+
+### 推論精度
+
+由上面的比較可知，在經過 OpenVINO 優化以後的模型在以上幾個指標下的差異不大
+
+> OpenVINO 優化指令: `mo --compress_to_fp16 --input_model "${1}" --output_dir "${OUTPUT_DIR}"`
+
+### 推論速度
+
+> 計算推論速度包含前處理、推論、後處理(對模型輸出 heatmap 做 NMS 等)，不包含計算以上 metric、繪圖、顯示等時間。SIFT 無後處理
+
+<figure>
+
+![HISLAB_test-total_time](./src_md/HISLAB_test-total_time.png "HISLAB_test-total_time")
+
+<figcaption>在 HISLAB 測試資料集序列上的執行時間</figcaption>
+
+</figure>
+
+TODO: run HISLAB test on laptop
 
 # 5. 結論
 
@@ -324,8 +471,8 @@ TODO: test on laptop
 
 1. [Superpoint: Self-supervised interest point detection and description](https://openaccess.thecvf.com/content_cvpr_2018_workshops/w9/html/DeTone_SuperPoint_Self-Supervised_Interest_CVPR_2018_paper.html)
 2. [MS-COCO val2017](https://images.cocodataset.org/zips/val2017.zip)
-3. [eric-yyjau / pytorch-superpoint](https://github.com/eric-yyjau/pytorch-superpoint)
-    * 用於訓練
+3. [eric-yyjau / pytorch-superpoint][1]
+    * 修改並用於訓練
 4. [magicleap/SuperPointPretrainedNetwork](https://github.com/magicleap/SuperPointPretrainedNetwork)
     * 參考後處理以及顯示結果 code
 5. [magicleap/SuperGluePretrainedNetwork](https://github.com/magicleap/SuperGluePretrainedNetwork)
@@ -340,3 +487,6 @@ TODO: test on laptop
 
 1. [https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing)
 2. [https://github.com/hihi313/pytorch-superpoint/tree/master](https://github.com/hihi313/pytorch-superpoint/tree/master)
+
+
+[1]: https://github.com/eric-yyjau/pytorch-superpoint "eric-yyjau / pytorch-superpoint"

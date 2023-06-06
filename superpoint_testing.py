@@ -61,6 +61,8 @@ def get_args():
                         help='Use cuda GPU to speed up network processing speed (default: False)')
     parser.add_argument('--colab', action='store_true',
                         help='Use google colab\' cv_imshow()')
+    parser.add_argument('--f_rej_th', type=float, default=3,
+                        help='Fundamental matrix\'s RANSAC rejection threshold')
     parser.add_argument('--no_display', action='store_true',
                         help='Do not display images to screen. Useful if running remotely (default: False).')
     parser.add_argument('--write', action='store_true',
@@ -370,19 +372,20 @@ if __name__ == '__main__':
             
                 # Outlier, by epipolar constraint & RANSAC
                 # Convert matches to 2 N*2 array
-                kp_c = []
-                kp_p = []
-                for m in matches:
-                    kp_c.append(cv_kp_c[m.queryIdx].pt)
-                    kp_p.append(cv_kp_p[m.trainIdx].pt)
-                kp_c = np.array(kp_c, dtype=np.float64)
-                kp_p = np.array(kp_p, dtype=np.float64)
-                # Find F, Accept only 2 N*2 array to represent point
-                fundamental, mask = cv2.findFundamentalMat(kp_c, kp_p,
-                                                method=cv2.FM_RANSAC, 
-                                                ransacReprojThreshold=3.0,
-                                                confidence=0.99)
-                num_outliers = np.count_nonzero(mask==0)
+                if len(matches) > 0:
+                    kp_c = []
+                    kp_p = []
+                    for m in matches:
+                        kp_c.append(cv_kp_c[m.queryIdx].pt)
+                        kp_p.append(cv_kp_p[m.trainIdx].pt)
+                    kp_c = np.array(kp_c, dtype=np.float64)
+                    kp_p = np.array(kp_p, dtype=np.float64)
+                    # Find F, Accept only 2 N*2 array to represent point
+                    fundamental, mask = cv2.findFundamentalMat(kp_c, kp_p,
+                                                    method=cv2.FM_RANSAC, 
+                                                    ransacReprojThreshold=args.f_rej_th,
+                                                    confidence=0.99)
+                    num_outliers = np.count_nonzero(mask==0)
 
             # Log
             log["image"] = vs.i
@@ -391,7 +394,7 @@ if __name__ == '__main__':
             log["post_time"] = end_post - start_post
             log["total_time"] = end - start
             log["match_prec"] = float(len(matches)) / float(len(cv_kp_c)) if len(cv_kp_c) > 0 else 0
-            log["outlier_prec"] = num_outliers / float(len(matches)) if len(matches) > 0 else 0
+            log["outlier_prec"] = num_outliers / float(len(matches)) if len(matches) > 0 else 1
             log["num_kp"] = len(cv_kp_c)
             log_dict(log)
             pd_rows.append(copy.deepcopy(log))
