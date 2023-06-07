@@ -571,6 +571,8 @@ SuperPoint 對比於傳統的特徵提取演算法而言，在有 dynamic illumi
     * 參考後處理以及顯示結果 code
 5. [magicleap/SuperGluePretrainedNetwork][7]
     * 參考後處理 code
+6. [TartanAir ocean dataset][11]
+7. [OIVIO outdoor dataset][10]
 
 # 7. 附錄
 
