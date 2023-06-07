@@ -334,7 +334,7 @@ Superpoint 論文中的自監督資料標注流程:
 ### 模型表現
 
 主要以 3 個資料集進行測試與比較。除了自建資料集，選擇有動態環境光(dynamic illumination)較多的場景，希望能測試深度學習方法和傳統方法之間在此情境的差距。輸入圖片大小固定為 240\*320(H\*W)。
-1. HISLAB
+1. [HISLAB][12]
     * 自建資料集中的測試資料集，與訓練資料集同一個場景(EE7, TR9)。中間**場景有切換**(第199、200幀之間)，故匹配的比例驟降，以及 outlier 比例驟升。
 2. [OIVIO OD_015_HH_03][10]
     * 手持設備並搭載照明系統拍攝的公開資料集，主要用於測試機載照明設備所造成的動態環境光對於特徵提取的影響
@@ -596,3 +596,4 @@ SuperPoint 對比於傳統的特徵提取演算法而言，在有 dynamic illumi
 [9]: https://github.com/hihi313/pytorch-superpoint/tree/master "SuperPoint GitHub repo"
 [10]: https://drive.google.com/a/colorado.edu/uc?id=1jAEX3X4836h_7avQl0xFKGl-8Wy1zocO&export=download "OIVIO OD_015_HH_03.tar.gz"
 [11]: https://tartanair.blob.core.windows.net/tartanair-release1/ocean/Hard/image_left.zip "TartanAir ocean hard"
+[12]: https://mailntustedutw-my.sharepoint.com/:u:/g/personal/m10902117_ms_ntust_edu_tw/EfpdClPAuAtPg55QqhHU0GUBUN0DY2Y68Vb1JA3P5NuWgw?e=b1MLOY "HISLAB dataset"
