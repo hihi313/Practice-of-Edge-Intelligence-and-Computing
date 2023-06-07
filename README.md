@@ -80,7 +80,7 @@ Testing hardware(2):
 |---|---|
 |Memory|8GB/2GB swap (in container)|
 |CPU|i5-1030NG7 @ 1.1GHz|
-|GPU|-| 
+|GPU|N/A (not used in container)| 
 
 Software environment: 
 
@@ -336,10 +336,12 @@ Superpoint 論文中的自監督資料標注流程:
 主要以 3 個資料集進行測試與比較。除了自建資料集，選擇有動態環境光(dynamic illumination)較多的場景，希望能測試深度學習方法和傳統方法之間在此情境的差距。輸入圖片大小固定為 240\*320(H\*W)。
 1. HISLAB
     * 自建資料集中的測試資料集，與訓練資料集同一個場景(EE7, TR9)。中間**場景有切換**(第199、200幀之間)，故匹配的比例驟降，以及 outlier 比例驟升。
-2. OIVIO OD_015_HH_03
+2. [OIVIO OD_015_HH_03][10]
     * 手持設備並搭載照明系統拍攝的公開資料集，主要用於測試機載照明設備所造成的動態環境光對於特徵提取的影響
-3. TartanAir ocean hard P009
+    * ![OIVIO OD preview](https://arpg.github.io/img/oivio/outdoor.gif "OIVIO OD preview")
+3. [TartanAir ocean hard P009][11]
     * 電腦模擬生成的資料集。水面變化會造成水下場景光線變化。電腦生成的魚類可能會造成小區域 repeated pattern，希望也能藉此測試深度學習方法和傳統方法的差異，以及深度學習方法是否能克服此問題。
+    * ![TartanAir ocean preview](https://theairlab.org/img/posts/2020-02-29-tartanair/ocean.gif "TartanAir ocean preview")
 
 因為後續希望應用在 SLAM 的系統中，所以比較的指標如下:
 
@@ -377,7 +379,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 可以發現，透過批配時的 ratio test，SuperPoint 能夠將正例以及負例的 L2 距離拉開，進而使更多的點對批配成功。這也表明在論文中的 loss function 是有效的
 
-> 論文中的 descriptor loss: $l_d\left(\mathbf{d}, \mathbf{d}^{\prime} ; s\right)=\lambda_d * s * \max \left(0, m_p-\mathbf{d}^T \mathbf{d}^{\prime}\right) +(1-s) * \max \left(0, \mathbf{d}^T \mathbf{d}^{\prime}-m_n\right)$，$\lambda_p$ 代表負例 loss 的權重
+> 論文中的 descriptor loss: $l_d\left(\mathbf{d}, \mathbf{d}^{\prime} ; s\right)=\lambda_d * s * \max \left(0, m_p-\mathbf{d}^T \mathbf{d}^{\prime}\right) +(1-s) * \max \left(0, \mathbf{d}^T \mathbf{d}^{\prime}-m_n\right)$，$\lambda_d$ 代表負例 loss 的權重
 
 #### outlier 比例
 
@@ -590,3 +592,5 @@ SuperPoint 對比於傳統的特徵提取演算法而言，在有 dynamic illumi
 [7]: https://github.com/magicleap/SuperGluePretrainedNetwork "Pretrained SuperGlue"
 [8]: https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing "My GitHub repo"
 [9]: https://github.com/hihi313/pytorch-superpoint/tree/master "SuperPoint GitHub repo"
+[10]: https://drive.google.com/a/colorado.edu/uc?id=1jAEX3X4836h_7avQl0xFKGl-8Wy1zocO&export=download "OIVIO OD_015_HH_03.tar.gz"
+[11]: https://tartanair.blob.core.windows.net/tartanair-release1/ocean/Hard/image_left.zip "TartanAir ocean hard"
