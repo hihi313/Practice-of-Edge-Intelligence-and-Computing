@@ -40,7 +40,7 @@
 
 <figure>
 
-![SuperPoint](./src_md/SuperPoint.svg)
+![SuperPoint](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/SuperPoint.svg)
 
 <figcaption>SuperPoint: 全卷積神經網絡，可同時計算 2D 興關鍵點位置和描述子</figcaption>
 
@@ -126,13 +126,13 @@ Container:
 flowchart LR
     subgraph prev["t-1"]
         direction LR
-        img_p[<img src='./src_md/tr9_000000000074.png' width='100' /> Previous frame]--> SP_p["SuperPoint"]
+        img_p[<img src='https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/tr9_000000000074.png' width='100' /> Previous frame]--> SP_p["SuperPoint"]
         SP_p --> desc_p["Descriptor"]
         SP_p --> kp_p["Keypoint"]
     end
     subgraph cur["t"]
         direction LR
-        img[<img src='./src_md/tr9_000000000074.png'  width='100' /> Current frame]--> SP["SuperPoint"]
+        img[<img src='https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/tr9_000000000074.png'  width='100' /> Current frame]--> SP["SuperPoint"]
         SP --> desc["Descriptor"]
         SP --> kp["Keypoint"]
     end
@@ -147,7 +147,7 @@ flowchart LR
 
 <figure>
 
-![SuperPoint testing](./src_md/superpoint_tr924_202208031659.png)
+![SuperPoint testing](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/superpoint_tr924_202208031659.png)
 
 <figcaption>SuperPoint 在自行錄製的資料集上進行推論，經 OpenCV 匹配的結果</figcaption>
 
@@ -164,7 +164,7 @@ flowchart LR
 
 <figure>
 
-![ee7](./src_md/ee7_000000000079.png)
+![ee7](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/ee7_000000000079.png)
 
 <figcaption>台科 EE 7 樓錄製的資料序列</figcaption>
 
@@ -172,7 +172,7 @@ flowchart LR
 
 <figure>
 
-![tr9](./src_md/tr9_000000000074.png)
+![tr9](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/tr9_000000000074.png)
 
 <figcaption>台科 TR 9 樓錄製的資料序列</figcaption>
 
@@ -226,7 +226,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![MS-COCO val2017 #724 label](./src_md/000000000724.png)
+![MS-COCO val2017 #724 label](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/000000000724.png)
 
 <figcaption>使用預訓練 magicpoint 網路在 MS-COCO val2017 資料集的圖片進行 Self-supervise 產生的 label</figcaption>
 
@@ -240,7 +240,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![ee7_000000000199](./src_md/ee7_000000000199.png)
+![ee7_000000000199](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/ee7_000000000199.png)
 
 <figcaption>使用預訓練 magicpoint 網路在自行錄製資料集(EE7)標記的 label</figcaption>
 
@@ -248,7 +248,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![tr9_000000002920](./src_md/tr9_000000002920.png)
+![tr9_000000002920](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/tr9_000000002920.png)
 
 <figcaption>使用預訓練 magicpoint 網路在自行錄製資料集(TR9)標記的 label</figcaption>
 
@@ -277,7 +277,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![SuperPoint architecture](./src_md/SuperPoint%20arch.png)
+![SuperPoint architecture](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/SuperPoint%20arch.png)
 
 <figcaption>SuperPoint 架構</figcaption>
 
@@ -285,7 +285,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![SuperPoint architecture](./src_md/SuperPoint%20arch%20inconv.png)
+![SuperPoint architecture](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/SuperPoint%20arch%20inconv.png)
 
 <figcaption>incvon block 架構</figcaption>
 
@@ -293,7 +293,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![SuperPoint architecture](./src_md/SuperPoint%20arch%20down.png)
+![SuperPoint architecture](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/SuperPoint%20arch%20down.png)
 
 <figcaption>down block 架構</figcaption>
 
@@ -310,7 +310,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![SuperPoint architecture](./src_md/loss_COCO%20and%20fine-tune.png)
+![SuperPoint architecture](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/loss_COCO%20and%20fine-tune.png)
 
 <figcaption>訓練 loss。灰色: 使用 COCO dataset，橘色: 使用自建資料集</figcaption>
 
@@ -353,7 +353,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![HISLAB_test-match_prec](./src_md/HISLAB_test-match_prec.png "HISLAB_test-match_prec")
+![HISLAB_test-match_prec](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/HISLAB_test-match_prec.png "HISLAB_test-match_prec")
 
 <figcaption>在 HISLAB 測試資料集序列上的匹配比例</figcaption>
 
@@ -361,7 +361,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![OIVIO_OD_015_HH_03-match_prec](./src_md/OIVIO_OD_015_HH_03-match_prec.png "OIVIO_OD_015_HH_03-match_prec")
+![OIVIO_OD_015_HH_03-match_prec](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/OIVIO_OD_015_HH_03-match_prec.png "OIVIO_OD_015_HH_03-match_prec")
 
 <figcaption>在 OIVIO OD_015_HH_03 測試資料集序列上的匹配比例</figcaption>
 
@@ -369,7 +369,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![TartanAir_ocean_hard_P009-match_prec](./src_md/TartanAir_ocean_hard_P009-match_prec.png "TartanAir_ocean_hard_P009-match_prec")
+![TartanAir_ocean_hard_P009-match_prec](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/TartanAir_ocean_hard_P009-match_prec.png "TartanAir_ocean_hard_P009-match_prec")
 
 <figcaption>在 TartanAir ocean hard P009 測試資料集序列上的匹配比例</figcaption>
 
@@ -388,7 +388,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![HISLAB_test-outlier_prec](./src_md/HISLAB_test-outlier_prec.png "HISLAB_test-outlier_prec")
+![HISLAB_test-outlier_prec](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/HISLAB_test-outlier_prec.png "HISLAB_test-outlier_prec")
 
 <figcaption>在 HISLAB 測試資料集序列上的 outlier 比例</figcaption>
 
@@ -396,7 +396,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![OIVIO_OD_015_HH_03-outlier_prec](./src_md/OIVIO_OD_015_HH_03-outlier_prec.png "OIVIO_OD_015_HH_03-outlier_prec")
+![OIVIO_OD_015_HH_03-outlier_prec](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/OIVIO_OD_015_HH_03-outlier_prec.png "OIVIO_OD_015_HH_03-outlier_prec")
 
 <figcaption>在 OIVIO OD_015_HH_03 測試資料集序列上的 outlier 比例，都約為 10% 以內。</figcaption>
 
@@ -404,7 +404,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![TartanAir_ocean_hard_P009-outlier_prec](./src_md/TartanAir_ocean_hard_P009-outlier_prec.png "TartanAir_ocean_hard_P009-outlier_prec")
+![TartanAir_ocean_hard_P009-outlier_prec](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/TartanAir_ocean_hard_P009-outlier_prec.png "TartanAir_ocean_hard_P009-outlier_prec")
 
 <figcaption>在 TartanAir ocean hard P009 測試資料集序列上的 outlier 比例</figcaption>
 
@@ -419,7 +419,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![HISLAB_test-num_kp](./src_md/HISLAB_test-num_kp.png "HISLAB_test-num_kp")
+![HISLAB_test-num_kp](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/HISLAB_test-num_kp.png "HISLAB_test-num_kp")
 
 <figcaption>在 HISLAB 測試資料集序列上的特徵點數量</figcaption>
 
@@ -427,7 +427,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![OIVIO_OD_015_HH_03-num_kp](./src_md/OIVIO_OD_015_HH_03-num_kp.png "OIVIO_OD_015_HH_03-num_kp")
+![OIVIO_OD_015_HH_03-num_kp](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/OIVIO_OD_015_HH_03-num_kp.png "OIVIO_OD_015_HH_03-num_kp")
 
 <figcaption>在 OIVIO OD_015_HH_03 測試資料集序列上的特徵點數量</figcaption>
 
@@ -435,7 +435,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![TartanAir_ocean_hard_P009-num_kp](./src_md/TartanAir_ocean_hard_P009-num_kp.png "TartanAir_ocean_hard_P009-num_kp")
+![TartanAir_ocean_hard_P009-num_kp](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/TartanAir_ocean_hard_P009-num_kp.png "TartanAir_ocean_hard_P009-num_kp")
 
 <figcaption>在 TartanAir ocean hard P009 測試資料集序列上的特徵點數量</figcaption>
 
@@ -471,7 +471,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![HISLAB_test-compare-num_kp](./src_md/HISLAB_test-compare-num_kp.png "HISLAB_test-compare-num_kp")
+![HISLAB_test-compare-num_kp](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/HISLAB_test-compare-num_kp.png "HISLAB_test-compare-num_kp")
 
 <figcaption>在 HISLAB 測試資料集序列上的特徵點數量</figcaption>
 
@@ -479,7 +479,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![HISLAB_test-compare-match_prec](./src_md/HISLAB_test-compare-match_prec.png "HISLAB_test-compare-match_prec")
+![HISLAB_test-compare-match_prec](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/HISLAB_test-compare-match_prec.png "HISLAB_test-compare-match_prec")
 
 <figcaption>在 HISLAB 測試資料集序列上的批配比例</figcaption>
 
@@ -487,7 +487,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![HISLAB_test-compare-outlier_prec](./src_md/HISLAB_test-compare-outlier_prec.png "HISLAB_test-compare-outlier_prec")
+![HISLAB_test-compare-outlier_prec](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/HISLAB_test-compare-outlier_prec.png "HISLAB_test-compare-outlier_prec")
 
 <figcaption>在 HISLAB 測試資料集序列上的 outlier 比例</figcaption>
 
@@ -497,7 +497,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![heatmap label_fine-tune val 200k](./src_md/heatmap%20label_fine-tune%20val%20200k.png "heatmap label_fine-tune val 200k")
+![heatmap label_fine-tune val 200k](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/heatmap%20label_fine-tune%20val%20200k.png "heatmap label_fine-tune val 200k")
 
 <figcaption>在 HISLAB 訓練資料集序列上訓練 200k 的 log。模型輸出的 heatmap 經過 NMS 後的結果(綠色點)，與 (pseudo) ground truth 經過 NMS 後的結果(紅色點)，繪製在訓練圖片上的結果。(若輸出和 ground truth 點有重合，點會呈現黃色，但較少且不明顯)</figcaption>
 
@@ -505,7 +505,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![superpoint_train_losses](./src_md/superpoint_train_losses.png "superpoint_train_losses")
+![superpoint_train_losses](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/superpoint_train_losses.png "superpoint_train_losses")
 
 <figcaption>SuperPoint loss 組成</figcaption>
 
@@ -520,7 +520,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![HISLAB_test-total_time](./src_md/HISLAB_test-total_time.png "HISLAB_test-total_time")
+![HISLAB_test-total_time](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/HISLAB_test-total_time.png "HISLAB_test-total_time")
 
 <figcaption>在 hardware (1) 上，於 HISLAB 測試資料集序列上，各種模型的執行時間</figcaption>
 
@@ -528,7 +528,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![HISLAB_test-compare-total_time](./src_md/HISLAB_test-compare-total_time.png "HISLAB_test-compare-total_time")
+![HISLAB_test-compare-total_time](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/HISLAB_test-compare-total_time.png "HISLAB_test-compare-total_time")
 
 <figcaption>在 hardware (1)(暖色系) 和 (2)(冷色系) 上，於 HISLAB 測試資料集序列上，各種模型的執行時間比較</figcaption>
 
@@ -536,7 +536,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![HISLAB_test-compare-total_time_SIFT](./src_md/HISLAB_test-compare-total_time_SIFT.png "HISLAB_test-compare-total_time_SIFT")
+![HISLAB_test-compare-total_time_SIFT](https://raw.githubusercontent.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/master/src_md/HISLAB_test-compare-total_time_SIFT.png "HISLAB_test-compare-total_time_SIFT")
 
 <figcaption>在 hardware (1)(暖色系) 和 (2)(冷色系) 上，於 HISLAB 測試資料集序列上，SIFT 的執行時間比較</figcaption>
 
