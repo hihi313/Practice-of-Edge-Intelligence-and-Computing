@@ -5,8 +5,6 @@
 
 # NTUST Edge AI 111-02 期末專題報告
 
-# 系所年級_學號_姓名
-
 # 1. 作品名稱
 
 深度學習特徵點提取
@@ -66,7 +64,7 @@
 說明使用硬體（如筆電、網路攝影機、麥克風、樹莓派、Jetson Nano、Arduino Nano 33 BLE Sense及其它各種輸入、輸出裝置或通訊界面等等）、連接方式及軟體階層說明等。
 -->
 
-Trainging/testing Hardware:
+Trainging/testing hardware(1):
 
 |Hardware type|Model/Spec|
 |---|---|
@@ -74,8 +72,9 @@ Trainging/testing Hardware:
 |CPU|i7-11700 @ 2.5GHz|
 |GPU|NVIDIA GeForce RTX 3090| 
 
-Testing hardware 2:
+Testing hardware(2):
 * 主要用於測試執行時間
+* MacBook Air 2020
 
 |Hardware type|Model/Spec|
 |---|---|
@@ -85,24 +84,35 @@ Testing hardware 2:
 
 Software environment: 
 
-Host: 
+Host(1): 
 
 |Software|Version|
 |---|---|
+|OS|Ubuntu 20.04|
 |NVIDIA GPU Driver(`nvidia.ko`)|470.182.03|
 |CUDA Driver(`libcuda.so`)|470.182.03|
 |NVIDIA Container toolkit(`nvidia-ctk`)|1.13.1| 
 |Docker| 20.10.21|
 
+Host(2): 
+
+|Software|Version|
+|---|---|
+|OS|MacOS 12|
+|NVIDIA GPU Driver(`nvidia.ko`)|N/A|
+|CUDA Driver(`libcuda.so`)|N/A|
+|NVIDIA Container toolkit(`nvidia-ctk`)|N/A| 
+|Docker| (待填) |
+
 
 Container: 
 * Based on `nvidia/cuda:11.3.1-cudnn8-runtime-ubuntu20.04`
-* [Dockerfile](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/docker/Dockerfile)
+* [Dockerfile](./docker/Dockerfile)
 
 |Software|Dependencies|
 |---|---|
-|apt|[apt_packages.text](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/docker/apt_packages.txt)|
-|pip|[requirements](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/docker/requirements.txt)|
+|apt|[apt_packages.text](./docker/apt_packages.txt)|
+|pip|[requirements](./docker/requirements.txt)|
 
 ## 3.3 工作原理及流程
 
@@ -116,13 +126,13 @@ Container:
 flowchart LR
     subgraph prev["t-1"]
         direction LR
-        img_p[<img src='https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/tr9_000000000074.png?raw=true' width='100' /> Previous frame]--> SP_p["SuperPoint"]
+        img_p[<img src='./src_md/tr9_000000000074.png' width='100' /> Previous frame]--> SP_p["SuperPoint"]
         SP_p --> desc_p["Descriptor"]
         SP_p --> kp_p["Keypoint"]
     end
     subgraph cur["t"]
         direction LR
-        img[<img src='https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/tr9_000000000074.png?raw=true'  width='100' /> Current frame]--> SP["SuperPoint"]
+        img[<img src='./src_md/tr9_000000000074.png'  width='100' /> Current frame]--> SP["SuperPoint"]
         SP --> desc["Descriptor"]
         SP --> kp["Keypoint"]
     end
@@ -137,7 +147,7 @@ flowchart LR
 
 <figure>
 
-![SuperPoint testing](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/superpoint_tr924_202208031659.png?raw=true)
+![SuperPoint testing](./src_md/superpoint_tr924_202208031659.png)
 
 <figcaption>SuperPoint 在自行錄製的資料集上進行推論，經 OpenCV 匹配的結果</figcaption>
 
@@ -154,7 +164,7 @@ flowchart LR
 
 <figure>
 
-![ee7](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/ee7_000000000079.png?raw=true)
+![ee7](./src_md/ee7_000000000079.png)
 
 <figcaption>台科 EE 7 樓錄製的資料序列</figcaption>
 
@@ -162,7 +172,7 @@ flowchart LR
 
 <figure>
 
-![tr9](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/tr9_000000000074.png?raw=true)
+![tr9](./src_md/tr9_000000000074.png)
 
 <figcaption>台科 TR 9 樓錄製的資料序列</figcaption>
 
@@ -225,8 +235,8 @@ Superpoint 論文中的自監督資料標注流程:
 
 實際標注流程: 
 
-1. 第一部份直接使用預[訓練的 magicpoint 網路](https://github.com/eric-yyjau/pytorch-superpoint/blob/master/logs/magicpoint_synth_t2/checkpoints/superPointNet_100000_checkpoint.pth.tar)
-2. 使用[預訓練 magicpoint](https://github.com/eric-yyjau/pytorch-superpoint/blob/master/logs/magicpoint_synth_t2/checkpoints/superPointNet_100000_checkpoint.pth.tar) 生成自建資料集以及 MS-COCO val2017 的 pseudo ground truth
+1. 第一部份直接使用預[訓練的 magicpoint 網路][3]
+2. 使用[預訓練 magicpoint][3] 生成自建資料集以及 MS-COCO val2017 的 pseudo ground truth
 
 <figure>
 
@@ -267,7 +277,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![SuperPoint architecture](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/SuperPoint%20arch.png?raw=true)
+![SuperPoint architecture](./src_md/SuperPoint%20arch.png)
 
 <figcaption>SuperPoint 架構</figcaption>
 
@@ -275,7 +285,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![SuperPoint architecture](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/SuperPoint%20arch%20inconv.png?raw=true)
+![SuperPoint architecture](./src_md/SuperPoint%20arch%20inconv.png)
 
 <figcaption>incvon block 架構</figcaption>
 
@@ -283,7 +293,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figure>
 
-![SuperPoint architecture](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing/blob/master/src_md/SuperPoint%20arch%20down.png?raw=true)
+![SuperPoint architecture](./src_md/SuperPoint%20arch%20down.png)
 
 <figcaption>down block 架構</figcaption>
 
@@ -316,7 +326,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 > 匹配(match): 使用 OpenCV 對特徵點描述子做匹配時，使用 L2 距離作為匹配的指標，並通過 ratio test (參考自 OpenCV 的官方教學)，篩選最近距離(的描述子) < 第二近距離 0.7 倍的點，符合此條件的點才視為匹配。隱含的意思是: 相近的點的距離要夠近，不相似的點的距離需要夠遠
 
-> outlier: 使用 OpenCV 以 RANSAC 方式估計 fundamental 矩陣 F。設某匹配點對於上一幀的位置 x，當前幀的位置 x'，則 $l'=x'=Fx$ (對極幾何約束(epipolar constraint)，l'為極線(epipolar line))。所以若 x 在當前幀的點位置 x' 與 l' 距離過大則視為 outlier。實驗時以參數 `--f_rej_th` 設定為 5 (除非另有標示)。
+> outlier: 使用 OpenCV 以 RANSAC 方式估計 fundamental 矩陣 F。設某匹配點對於上一幀的位置 x，當前幀的位置 x'，則 l'=x'=Fx (對極幾何約束(epipolar constraint)，l'為極線(epipolar line))。所以若 x 在當前幀的點位置 x' 與 l' 距離過大則視為 outlier。實驗時以參數 `--f_rej_th` 設定為 5 (除非另有標示)。
 > 另外，雖然場景中的動態物體也會讓誤差值較大。但若正確批配的話，理論上不論何種特徵提取方式都會受到影響。
 
 > `f_rej_th`: 實驗過程中發現此閥值若使用預設的 3，SuperPoint 的 `outlier_prec` 很像會比較高，故設(SuperPoint 及 SIFT 的閥值皆) 為 5。推測是因為 SuperPoint 提取的特稱點的熱點圖直接使用 `max_pool` 的方式達到 NMS 的效果，所以在精度上最多只能達到像素級別。而觀察 OpenCV SIFT 的特徵點位置輸出，則其可達到 subpixel 的精度。因為目前的目標並沒有要測試其精度，目的是找出誤差較大的誤匹配，故將此閥值調高。
@@ -382,7 +392,7 @@ Superpoint 論文中的自監督資料標注流程:
 
 <figcaption>在 HISLAB 測試資料集序列上的 outlier 比例</figcaption>
 
-</figure>
+</figure> 
 
 <figure>
 
@@ -444,7 +454,65 @@ Superpoint 論文中的自監督資料標注流程:
 
 由上面的比較可知，在經過 OpenVINO 優化以後的模型在以上幾個指標下的差異不大
 
-> OpenVINO 優化指令: `mo --compress_to_fp16 --input_model "${1}" --output_dir "${OUTPUT_DIR}"`
+> 使用的 OpenVINO 優化指令: `mo --compress_to_fp16 --input_model "${1}" --output_dir "${OUTPUT_DIR}"`
+
+#### 不同訓練方式比較
+
+以下比較 3 種訓練方式所得到的模型間的差異:
+1. `60k_COCO`
+    * 在 MS-COCO val 2017 資料集上做訓練的模型。如上訓練 loss 圖中的灰色線
+    * 因發現訓練時 loss 有回彈，故選用回彈前的模型
+2. `35k_finetune`
+    * 基於 `60k_COCO` 再使用自建資料集進行 fine-tune 的模型。如上訓練 loss 圖中的橘色線
+    * 放大 validation 和 training loss 之後發現有些微的 overfitting，故選用 overfitting 前的模型。
+    * (實驗基本上皆基於此模型)
+3. `80k_preAndFine`
+    * 先前實驗時所紀錄的模型，基於在 MS-COCO 2014 資料集上訓練約 90k 的 pre-train 模型，再令其在自建資料集上進行 fine-tune ，訓練約 80k 後所得到的模型
+
+<figure>
+
+![HISLAB_test-compare-num_kp](./src_md/HISLAB_test-compare-num_kp.png "HISLAB_test-compare-num_kp")
+
+<figcaption>在 HISLAB 測試資料集序列上的特徵點數量</figcaption>
+
+</figure>
+
+<figure>
+
+![HISLAB_test-compare-match_prec](./src_md/HISLAB_test-compare-match_prec.png "HISLAB_test-compare-match_prec")
+
+<figcaption>在 HISLAB 測試資料集序列上的批配比例</figcaption>
+
+</figure>
+
+<figure>
+
+![HISLAB_test-compare-outlier_prec](./src_md/HISLAB_test-compare-outlier_prec.png "HISLAB_test-compare-outlier_prec")
+
+<figcaption>在 HISLAB 測試資料集序列上的 outlier 比例</figcaption>
+
+</figure>
+
+由上圖中可知，基本上的趨勢為: 訓練越多次對於所找到的特徵點數量有些為增加，例如: `60k_COCO` 對比於 `35k_finetune` 而言，特徵點提取的數量有較明顯的增加，而 `80k_preAndFine` 對比於 `35k_finetune` 在訓練更多次後則增加的趨勢區緩。而對於特徵點描述子的改進，以匹配比例以及 outlier 比例的指標來看，相對於特徵點數量而言，並沒有較明顯的進步。因此，模型在訓練後期很有可能主要在學習找到特徵點的位置或是將特徵點的位置對齊 ground truth。這也能從訓練時的 log 圖片中觀察到:
+
+<figure>
+
+![heatmap label_fine-tune val 200k](./src_md/heatmap%20label_fine-tune%20val%20200k.png "heatmap label_fine-tune val 200k")
+
+<figcaption>在 HISLAB 訓練資料集序列上訓練 200k 的 log。模型輸出的 heatmap 經過 NMS 後的結果(綠色點)，與 (pseudo) ground truth 經過 NMS 後的結果(紅色點)，繪製在訓練圖片上的結果。(若輸出和 ground truth 點有重合，點會呈現黃色，但較少且不明顯)</figcaption>
+
+</figure>
+
+<figure>
+
+![superpoint_train_losses](./src_md/superpoint_train_losses.png "superpoint_train_losses")
+
+<figcaption>SuperPoint loss 組成</figcaption>
+
+</figure>
+
+而且，loss 的組成為: `loss` = `loss_det` + `loss_det_wrap` + 1*(1*`positive_dest` + `negative_dist`)，所以若特徵點位置相關的 loss(`loss_det`,`loss_det_wrap`)較大，則整體 loss 也大。
+在途中約 20k 到 40k 之間，descriptor 相關的 loss (`positive_dest`, `negative_dist`) 基本上變動不大，而位置相關的 loss 下降較多，因此 descriptor 相關 loss 收斂的速度較位置相關 loss 快。
 
 ### 推論速度
 
@@ -454,13 +522,37 @@ Superpoint 論文中的自監督資料標注流程:
 
 ![HISLAB_test-total_time](./src_md/HISLAB_test-total_time.png "HISLAB_test-total_time")
 
-<figcaption>在 HISLAB 測試資料集序列上的執行時間</figcaption>
+<figcaption>在 hardware (1) 上，於 HISLAB 測試資料集序列上，各種模型的執行時間</figcaption>
 
 </figure>
 
-TODO: run HISLAB test on laptop
+<figure>
+
+![HISLAB_test-compare-total_time](./src_md/HISLAB_test-compare-total_time.png "HISLAB_test-compare-total_time")
+
+<figcaption>在 hardware (1)(暖色系) 和 (2)(冷色系) 上，於 HISLAB 測試資料集序列上，各種模型的執行時間比較</figcaption>
+
+</figure>
+
+<figure>
+
+![HISLAB_test-compare-total_time_SIFT](./src_md/HISLAB_test-compare-total_time_SIFT.png "HISLAB_test-compare-total_time_SIFT")
+
+<figcaption>在 hardware (1)(暖色系) 和 (2)(冷色系) 上，於 HISLAB 測試資料集序列上，SIFT 的執行時間比較</figcaption>
+
+</figure>
+
+基本上在 hardware (2) 上，不論有無優化，模型的執行速度都約為 1~2 FPS，只能說能跑。但其中有幾點觀察發現:
+1. 在 hardware (1) 上，OpenVINO 的優化對比於直接使用 ONNX 模型進行 inference，差別並不大，似乎只要不是用 pytorch+CPU 執行就會比較快
+2. 而在 hardware (2) 上，pytorch+CPU 的模型反而比 OpenVINO 和 ONNX 快，目前不知道原因為何，GitHub 上也有相關 [issue][2] 但似乎仍沒有很好的解決/解釋。
 
 # 5. 結論
+
+SuperPoint 對比於傳統的特徵提取演算法而言，在有 dynamic illumination 或是 repeated pattern 的情況下會有比較好的表現。但仍有幾點仍能夠改進之處:
+1. 最多只能在 8\*8 的區域中有一個特徵點，造成特徵點較少。
+2. NMS 使用 `max_pool`，造成特徵點位置的精度不足。
+    * 若輸出會當成是後續深度學習模型的一部分輸入，或許直接使用 heatmap 較能有更多且精確的資訊。
+3. 特徵點位置相關的 loss 後期收斂速度較慢，如實驗所示，需要訓練更多次才能讓特徵點數量上升。
 
 # 6. 參考資料
 
@@ -469,13 +561,13 @@ TODO: run HISLAB test on laptop
 外部資料集及標註檔
 -->
 
-1. [Superpoint: Self-supervised interest point detection and description](https://openaccess.thecvf.com/content_cvpr_2018_workshops/w9/html/DeTone_SuperPoint_Self-Supervised_Interest_CVPR_2018_paper.html)
-2. [MS-COCO val2017](https://images.cocodataset.org/zips/val2017.zip)
+1. [Superpoint: Self-supervised interest point detection and description][4]
+2. [MS-COCO val2017][5]
 3. [eric-yyjau / pytorch-superpoint][1]
     * 修改並用於訓練
-4. [magicleap/SuperPointPretrainedNetwork](https://github.com/magicleap/SuperPointPretrainedNetwork)
+4. [magicleap/SuperPointPretrainedNetwork][6]
     * 參考後處理以及顯示結果 code
-5. [magicleap/SuperGluePretrainedNetwork](https://github.com/magicleap/SuperGluePretrainedNetwork)
+5. [magicleap/SuperGluePretrainedNetwork][7]
     * 參考後處理 code
 
 # 7. 附錄
@@ -485,8 +577,16 @@ TODO: run HISLAB test on laptop
 其它說明內容
 -->
 
-1. [https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing](https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing)
-2. [https://github.com/hihi313/pytorch-superpoint/tree/master](https://github.com/hihi313/pytorch-superpoint/tree/master)
+1. [GitHub repo][8]
+2. [SuperPoint GitHub repo][9]
 
 
 [1]: https://github.com/eric-yyjau/pytorch-superpoint "eric-yyjau / pytorch-superpoint"
+[2]: https://github.com/ultralytics/yolov5/issues/6607 "Why is the inference speed of Yolov5 PyTorch model (with raw uint8 images) better than ONNX and OpenVino models"
+[3]: https://github.com/eric-yyjau/pytorch-superpoint/blob/master/logs/magicpoint_synth_t2/checkpoints/superPointNet_100000_checkpoint.pth.tar "Pre-trained SuperPoint"
+[4]: https://openaccess.thecvf.com/content_cvpr_2018_workshops/w9/html/DeTone_SuperPoint_Self-Supervised_Interest_CVPR_2018_paper.html "SuperPoint"
+[5]: https://images.cocodataset.org/zips/val2017.zip "MS-COCO val2017"
+[6]: https://github.com/magicleap/SuperPointPretrainedNetwork "Pretrained SuperPoint"
+[7]: https://github.com/magicleap/SuperGluePretrainedNetwork "Pretrained SuperGlue"
+[8]: https://github.com/hihi313/Practice-of-Edge-Intelligence-and-Computing "My GitHub repo"
+[9]: https://github.com/hihi313/pytorch-superpoint/tree/master "SuperPoint GitHub repo"
