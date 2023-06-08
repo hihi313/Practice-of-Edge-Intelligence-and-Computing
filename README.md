@@ -98,11 +98,11 @@ Host(2):
 
 |Software|Version|
 |---|---|
-|OS|MacOS 12|
+|OS|MacOS 12.6.2|
 |NVIDIA GPU Driver(`nvidia.ko`)|N/A|
 |CUDA Driver(`libcuda.so`)|N/A|
 |NVIDIA Container toolkit(`nvidia-ctk`)|N/A| 
-|Docker| (待填) |
+|Docker| 20.10.22 |
 
 
 Container: 
